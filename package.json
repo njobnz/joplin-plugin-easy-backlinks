@@ -1,6 +1,7 @@
 {
   "name": "joplin-plugin-easy-backlinks",
   "version": "1.0.0",
+	"description": "A lightweight backlinks plugin for Joplin.",
   "scripts": {
     "dist": "webpack --env joplin-plugin-config=buildMain && webpack --env joplin-plugin-config=buildExtraScripts && webpack --env joplin-plugin-config=createArchive",
     "prepare": "npm run dist",
