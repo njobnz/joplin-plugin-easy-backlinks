@@ -1,0 +1,3 @@
+{
+	"extraScripts": ["plugins/markdownIt/plugin.ts", "plugins/backlinks/assets/panel.ts", "plugins/markdownIt/assets/index.ts"]
+}
