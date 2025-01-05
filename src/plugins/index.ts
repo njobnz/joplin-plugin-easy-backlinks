@@ -219,8 +219,7 @@ export default class App {
             ? `${head}\n\n${note.body}`
             : `${note.body}\n${head}\n`;
 
-        await joplin.commands.execute('textSelectAll');
-        await joplin.commands.execute('replaceSelection', body);
+        await joplin.commands.execute('editor.setText', body);
       },
     });
   };
@@ -256,8 +255,7 @@ export default class App {
             ? `${html}\n\n${note.body}`
             : `${note.body}\n${html}\n`;
 
-        await joplin.commands.execute('textSelectAll');
-        await joplin.commands.execute('replaceSelection', body);
+        await joplin.commands.execute('editor.setText', body);
       },
     });
 
