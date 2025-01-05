@@ -8,6 +8,10 @@
 	"author": "Nelson Job",
 	"homepage_url": "https://github.com/njobnz/joplin-plugin-easy-backlinks#readme",
 	"repository_url": "https://github.com/njobnz/joplin-plugin-easy-backlinks",
+	"platforms": [
+		"mobile",
+		"desktop"
+	],
 	"keywords": [
 		"backlinks",
 		"reference"

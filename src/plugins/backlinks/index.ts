@@ -1,9 +1,10 @@
 import joplin from 'api';
 import { ViewHandle } from 'api/types';
-import { existsSync, readFileSync } from 'fs';
 import { BACKLINKS_PANEL_EL, BACKLINKS_PANEL_ID } from '../../constants';
 import localization from '../../localization';
 import App from '..';
+
+let fs: any = null;
 
 export default class BacklinksView {
   app: App = null;
@@ -18,7 +19,7 @@ export default class BacklinksView {
   content = async (text: string = ''): Promise<string> => {
     const html = text && text !== '' ? text : this.app.renderer.render(localization.message__reloadPanel);
     const path = await this.setting('customCss');
-    const style = existsSync(path) ? `<style>${readFileSync(path, 'utf-8')}</style>` : '';
+    const style = fs && fs.existsSync(path) ? `<style>${fs.readFileSync(path, 'utf-8')}</style>` : '';
     return `${style}<div id="${BACKLINKS_PANEL_EL}">${html}</div>`;
   };
 
@@ -37,19 +38,31 @@ export default class BacklinksView {
     if (!this.app) return;
 
     if ((await this.setting('showPanel')) as boolean) {
-      if (!this.panel) await this.build();
-      else await joplin.views.panels.show(this.panel);
+      if (!this.panel) {
+        await this.build();
+      } else {
+        await joplin.views.panels.show(this.panel);
+      }
 
       if (this.panel) {
         const backlinks = await this.app.getBacklinksList(true, true);
         backlinks.head = backlinks.head.replace(/<\/?h[1-6]\b/g, match => (match[1] === '/' ? '</h1' : '<h1'));
         await joplin.views.panels.setHtml(this.panel, await this.content(`${backlinks.head}${backlinks.body}`));
-      } else console.error('Failed to initialize backlinks panel.');
-    } else if (this.panel) await joplin.views.panels.hide(this.panel);
+      } else {
+        console.error('Failed to initialize backlinks panel.');
+      }
+    } else if (this.panel) {
+      await joplin.views.panels.hide(this.panel);
+    }
   };
 
   init = async (): Promise<void> => {
     this.setting = this.app.setting;
+
+    try {
+      fs = await import('fs');
+    } catch (e) {}
+
     await joplin.settings.onChange(this.refresh);
     await joplin.workspace.onNoteSelectionChange(this.refresh);
   };
