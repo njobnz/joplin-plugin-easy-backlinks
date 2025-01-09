@@ -106,13 +106,19 @@ export default class App {
     result.hide = notes.length === 0 && (await this.setting<boolean>('hideEmpty'));
 
     if (isPanel || !result.hide) {
-      result.head = this.renderer.render(this.generateBacklinksHead(note, await this.setting<string>('listHeader')));
-      result.body = this.renderer.render(
+      result.head = await this.renderer.render(
+        this.generateBacklinksHead(note, await this.setting<string>('listHeader'))
+      );
+      result.body = await this.renderer.render(
         await this.generateBacklinksList(
           notes,
           await this.setting<BacklinksListType>('listType'),
           await this.setting<boolean>('showHint')
-        )
+        ),
+        {
+          postMessageSyntax: isPanel ? 'webviewApi.postMessage' : 'ipcProxySendToHost',
+          plainResourceRendering: !(await this.setting<boolean>('showIcon')),
+        }
       );
     }
 

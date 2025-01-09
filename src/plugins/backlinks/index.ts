@@ -26,7 +26,7 @@ export default class BacklinksView {
   build = async (): Promise<void> => {
     if (!this.app && this.panel) return;
     this.panel = await joplin.views.panels.create(BACKLINKS_PANEL_ID);
-    const html = this.app.renderer.render(localization.message__reloadPanel);
+    const html = await this.app.renderer.render(localization.message__reloadPanel);
     await joplin.views.panels.setHtml(this.panel, await this.content(html));
     await joplin.views.panels.addScript(this.panel, './plugins/backlinks/assets/panel.css');
     await joplin.views.panels.addScript(this.panel, './plugins/backlinks/assets/panel.js');
