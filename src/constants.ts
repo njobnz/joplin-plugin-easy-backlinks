@@ -25,6 +25,23 @@ export enum BacklinksListType {
   Delimited,
 }
 
+export enum BacklinksListSort {
+  Default = '',
+  Title = 'title',
+  Created = 'created_time',
+  Updated = 'updated_time',
+  UserCreated = 'user_created_time',
+  UserUpdated = 'user_updated_time',
+  TodoDue = 'todo_due',
+  TodoCompleted = 'todo_completed',
+  Order = 'order',
+}
+
+export enum BacklinksListOrder {
+  Ascending,
+  Descending,
+}
+
 export enum BacklinksListParent {
   Full,
   Direct,

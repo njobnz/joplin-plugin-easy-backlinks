@@ -1,7 +1,14 @@
 import joplin from 'api';
 import { SettingItem, SettingItemSubType, SettingItemType, SettingStorage } from 'api/types';
 import { PluginSettings } from '../types';
-import { BacklinksListParent, BacklinksListPosition, BacklinksListType, SETTINGS_SECTION_NAME } from '../constants';
+import {
+  BacklinksListOrder,
+  BacklinksListParent,
+  BacklinksListPosition,
+  BacklinksListSort,
+  BacklinksListType,
+  SETTINGS_SECTION_NAME,
+} from '../constants';
 import localization from '../localization';
 import setSetting from '../utils/setSetting';
 import getSetting from '../utils/getSetting';
@@ -73,6 +80,43 @@ export default class AppSettings {
           [BacklinksListType.Ordered]: 'Ordered List',
           [BacklinksListType.Unordered]: 'Unordered List',
           [BacklinksListType.Delimited]: 'New Lines',
+        },
+      },
+
+      listSort: {
+        public: true,
+        section: SETTINGS_SECTION_NAME,
+        storage: SettingStorage.File,
+        label: localization.setting__listSort,
+        description: localization.setting__listSort__description,
+        type: SettingItemType.String,
+        value: BacklinksListSort.Default,
+        isEnum: true,
+        options: {
+          [BacklinksListSort.Default]: 'Default',
+          [BacklinksListSort.Title]: 'Title',
+          [BacklinksListSort.Created]: 'Created',
+          [BacklinksListSort.Updated]: 'Updated',
+          [BacklinksListSort.UserCreated]: 'User Created',
+          [BacklinksListSort.UserUpdated]: 'User Updated',
+          [BacklinksListSort.TodoDue]: 'Todo Due',
+          [BacklinksListSort.TodoCompleted]: 'Todo Completed',
+          [BacklinksListSort.Order]: 'Custom Order',
+        },
+      },
+
+      listOrder: {
+        public: true,
+        section: SETTINGS_SECTION_NAME,
+        storage: SettingStorage.File,
+        label: localization.setting__listOrder,
+        description: localization.setting__listOrder__description,
+        type: SettingItemType.Int,
+        value: BacklinksListOrder.Ascending,
+        isEnum: true,
+        options: {
+          [BacklinksListOrder.Ascending]: 'Ascending',
+          [BacklinksListOrder.Descending]: 'Descending',
         },
       },
 

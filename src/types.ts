@@ -4,6 +4,8 @@ export interface PluginSettings {
   listHeader: string;
   listPosition: number;
   listType: number;
+  listSort: string;
+  listOrder: number;
   showParent: number;
   hideEmpty: boolean;
   showHint: boolean;
@@ -22,6 +24,13 @@ export interface JoplinNote {
   parent_id: string;
   title: string;
   body: string;
+  created_time: number;
+  updated_time: number;
+  user_created_time: number;
+  user_updated_time: number;
+  todo_due: number;
+  todo_completed: number;
+  order: number;
 }
 
 export interface BacklinksContent {

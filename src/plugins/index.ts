@@ -13,6 +13,8 @@ import {
   SET_SETTING_CMD,
   GET_SETTINGS_CMD,
   GET_GLOBAL_VALUE_CMD,
+  BacklinksListSort,
+  BacklinksListOrder,
 } from '../constants';
 import fetchNoteById from '../utils/fetchNoteById';
 import fetchNoteParentTitles from '../utils/fetchNoteParentTitles';
@@ -101,7 +103,9 @@ export default class App {
     const notes = await findNoteBacklinks(
       note.id,
       await this.setting<string[]>('ignoreList'),
-      await this.setting<string>('ignoreText')
+      await this.setting<string>('ignoreText'),
+      await this.setting<BacklinksListSort>('listSort'),
+      await this.setting<BacklinksListOrder>('listOrder')
     );
     result.hide = notes.length === 0 && (await this.setting<boolean>('hideEmpty'));
 

@@ -8,6 +8,10 @@ interface AppLocalization {
   setting__listPosition__description: string;
   setting__listType: string;
   setting__listType__description: string;
+  setting__listSort: string;
+  setting__listSort__description: string;
+  setting__listOrder: string;
+  setting__listOrder__description: string;
   setting__showParents: string;
   setting__showParents__description: string;
   setting__hideEmpty: string;
@@ -68,6 +72,10 @@ const defaultStrings: AppLocalization = {
   setting__listPosition__description: 'Position of the backlinks block.',
   setting__listType: 'List style',
   setting__listType__description: 'Display backlinks as new lines, ordered, or unordered list.',
+  setting__listSort: 'List sort',
+  setting__listSort__description: 'Property to sort backlinks by.',
+  setting__listOrder: 'List order',
+  setting__listOrder__description: 'Sort backlinks in ascending or descending order.',
   setting__showParents: 'Show notebooks',
   setting__showParents__description: 'Include notebook paths in backlink titles.',
   setting__hideEmpty: 'Hide empty',
