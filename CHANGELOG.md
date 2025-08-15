@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.2.1](https://github.com/njobnz/joplin-plugin-easy-backlinks/compare/v1.2.0...v1.2.1) (2025-08-15)
+
+
+### Bug Fixes
+
+* backlink panel urls not working ([7c95148](https://github.com/njobnz/joplin-plugin-easy-backlinks/commit/7c951487f62138e6a88f45e99f0538dbe14ca1f8)), closes [#4](https://github.com/njobnz/joplin-plugin-easy-backlinks/issues/4)
+
 ## [1.2.0](https://github.com/njobnz/joplin-plugin-easy-backlinks/compare/v1.1.2...v1.2.0) (2025-07-27)
 
 
