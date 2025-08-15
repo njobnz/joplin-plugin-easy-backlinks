@@ -1,5 +1,4 @@
 import joplin from 'api';
-import { MarkupLanguage } from '../constants';
 import MarkdownIt from 'markdown-it';
 import App from '.';
 
@@ -10,30 +9,15 @@ export default class Renderer {
   canRender: boolean = false;
   showIcon: boolean = false;
 
-  constructor(app: App, options: any = {}) {
+  constructor(app: App) {
     if (!app) throw Error('app cannot be null');
     this.app = app;
     this.markdown = new MarkdownIt({ breaks: true });
-    this.options = {
-      bodyOnly: true,
-      ...options,
-    };
   }
 
-  // https://github.com/laurent22/joplin/blob/e1e2ba8888ea290a76cdb573f50b9f7a0f25da58/packages/lib/commands/renderMarkup.ts#L23
-  // https://github.com/laurent22/joplin/blob/e1e2ba8888ea290a76cdb573f50b9f7a0f25da58/packages/renderer/types.ts#L20
-  // https://github.com/laurent22/joplin/blob/e1e2ba8888ea290a76cdb573f50b9f7a0f25da58/packages/renderer/MdToHtml.ts#L466
-  render = async (text: string, options: any = {}) => {
+  render = async (text: string) => {
     this.showIcon = await this.app.setting<boolean>('showIcon');
-
-    return this.canRender
-      ? (
-          await joplin.commands.execute('renderMarkup', MarkupLanguage.Markdown, text, null, {
-            ...this.options,
-            ...options,
-          })
-        ).html
-      : this.markdown.render(text);
+    return this.markdown.render(text);
   };
 
   async init() {

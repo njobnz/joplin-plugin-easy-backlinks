@@ -118,11 +118,7 @@ export default class App {
           notes,
           await this.setting<BacklinksListType>('listType'),
           await this.setting<boolean>('showHint')
-        ),
-        {
-          postMessageSyntax: isPanel ? 'webviewApi.postMessage' : 'ipcProxySendToHost',
-          plainResourceRendering: !(await this.setting<boolean>('showIcon')),
-        }
+        )
       );
     }
 
