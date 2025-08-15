@@ -27,7 +27,7 @@
   "homepage": "https://github.com/njobnz/joplin-plugin-easy-backlinks#readme",
   "repository": {
     "type": "git",
-    "url": "git@github.com:njobnz/joplin-plugin-easy-backlinks.git"
+    "url": "git+ssh://git@github.com/njobnz/joplin-plugin-easy-backlinks.git"
   },
   "bugs": {
     "url": "https://github.com/njobnz/joplin-plugin-easy-backlinks/issues",
