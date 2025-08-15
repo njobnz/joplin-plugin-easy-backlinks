@@ -57,7 +57,7 @@ git push origin tag release --force
 - Example: `feat: add settings dialog` or `fix: correct backlink parsing`.
 - Each commit should be atomic and address a single concern.
 
-## More Information
+## Resources
 
 - [Joplin Plugin API](https://joplinapp.org/api/references/plugin_api/classes/joplin.html)
 - [Joplin Data API](https://joplinapp.org/help/api/references/rest_api)
