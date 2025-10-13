@@ -183,7 +183,7 @@ export default class AppSettings {
         label: localization.setting__customCss,
         description: localization.setting__customCss__description,
         subType: SettingItemSubType.FilePath,
-        value: `${await joplin.settings.globalValue('profileDir')}/easy-backlinks.css`,
+        value: `${(await joplin.settings.globalValues(['profileDir']))[0]}/easy-backlinks.css`,
         advanced: true,
       },
 

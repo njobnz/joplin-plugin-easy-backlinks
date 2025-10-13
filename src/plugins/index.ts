@@ -56,7 +56,7 @@ export default class App {
       case GET_BACKLINKS_CMD:
         return await this.getBacklinksList(message?.isFound ? true : false);
       case GET_GLOBAL_VALUE_CMD:
-        return await joplin.settings.globalValue(message?.name);
+        return (await joplin.settings.globalValues([message?.name]))[0] || null;
       case GET_SETTINGS_CMD:
         const values = message?.values;
         if (!Array.isArray(values)) return {};
@@ -193,7 +193,7 @@ export default class App {
       execute: async () => {
         try {
           const settingKey = 'plugin-joplin.plugin.ambrt.backlinksToNote.myBacklinksCustomSettingIgnoreList';
-          const importList = await joplin.settings.globalValue(settingKey);
+          const importList = (await joplin.settings.globalValues([settingKey]))[0] || [];
           const ignoreList = await this.setting<string[]>('ignoreList');
           await this.setting<string[]>('ignoreList', [...new Set([...ignoreList, ...importList])]);
           alert(localization.message__importIgnoreListSuccess);
