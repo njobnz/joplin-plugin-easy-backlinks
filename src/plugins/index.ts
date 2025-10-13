@@ -42,13 +42,13 @@ export default class App {
     this.panel = new BacklinksView(this);
   }
 
-  setting = async <T>(name: string, value?: T): Promise<T> => {
+  setting = async <T>(name: string, value?: T, isGlobal?: boolean): Promise<T> => {
     if (!this.settings) throw Error('Settings not initialized.');
     if (value !== undefined) {
       await this.settings.set(name, value);
       return value;
     }
-    return await this.settings.get<T>(name);
+    return await this.settings.get<T>(name, undefined, isGlobal);
   };
 
   onMessageHandler = async (message: any): Promise<any> => {
@@ -56,7 +56,7 @@ export default class App {
       case GET_BACKLINKS_CMD:
         return await this.getBacklinksList(message?.isFound ? true : false);
       case GET_GLOBAL_VALUE_CMD:
-        return (await joplin.settings.globalValues([message?.name]))[0] || null;
+        return await this.setting(message?.name, undefined, true) ?? null;
       case GET_SETTINGS_CMD:
         const values = message?.values;
         if (!Array.isArray(values)) return {};
@@ -193,7 +193,7 @@ export default class App {
       execute: async () => {
         try {
           const settingKey = 'plugin-joplin.plugin.ambrt.backlinksToNote.myBacklinksCustomSettingIgnoreList';
-          const importList = (await joplin.settings.globalValues([settingKey]))[0] || [];
+          const importList = await this.setting<string[]>(settingKey, undefined, true) || [];
           const ignoreList = await this.setting<string[]>('ignoreList');
           await this.setting<string[]>('ignoreList', [...new Set([...ignoreList, ...importList])]);
           alert(localization.message__importIgnoreListSuccess);

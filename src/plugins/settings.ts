@@ -32,7 +32,7 @@ export default class AppSettings {
    *
    * @returns {Promise<T>} The setting value.
    */
-  get: <T>(name: string, fallback?: T) => Promise<T> = getSetting;
+  get: <T>(name: string, fallback?: T, isGlobal?: boolean) => Promise<T> = getSetting;
 
   /**
    * Set a setting using Joplin API.
@@ -183,7 +183,7 @@ export default class AppSettings {
         label: localization.setting__customCss,
         description: localization.setting__customCss__description,
         subType: SettingItemSubType.FilePath,
-        value: `${(await joplin.settings.globalValues(['profileDir']))[0]}/easy-backlinks.css`,
+        value: `${await this.get('profileDir', undefined, true)}/easy-backlinks.css`,
         advanced: true,
       },
 
