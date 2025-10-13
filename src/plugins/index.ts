@@ -219,7 +219,7 @@ export default class App {
         if (!note) return;
 
         const header = replaceEscape(await this.setting<string>('manualHeader'));
-        const head = header ? header : await this.generateBacklinksHead(note, await this.setting<string>('listHeader'));
+        const head = header ? header : this.generateBacklinksHead(note, await this.setting<string>('listHeader'));
         const body =
           (await this.setting<BacklinksListPosition>('listPosition')) === BacklinksListPosition.Header
             ? `${head}\n\n${note.body}`
@@ -249,7 +249,7 @@ export default class App {
         const disable = await this.setting<string>('disableText');
         const header = replaceEscape(await this.setting<string>('manualHeader'));
         const text = !note.body.includes(disable) ? `${disable}\n` : '';
-        const head = header ? header : await this.generateBacklinksHead(note, await this.setting<string>('listHeader'));
+        const head = header ? header : this.generateBacklinksHead(note, await this.setting<string>('listHeader'));
         const list = await this.generateBacklinksList(
           notes,
           await this.setting<BacklinksListType>('listType'),
