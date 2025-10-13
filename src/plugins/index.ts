@@ -283,7 +283,10 @@ export default class App {
       iconName: 'fas fa-hand-point-left',
       execute: async () => {
         const note = (await joplin.workspace.selectedNote()) as JoplinNote;
-        if (!note) return;
+        if (!note) {
+          alert(localization.message__ignoreListNoSelectedNote);
+          return;
+        }
 
         const list = await this.setting<string[]>('ignoreList');
         if (list.includes(note.id)) {
@@ -304,15 +307,15 @@ export default class App {
     await joplin.commands.register({
       name: 'openBacklinksIgnoreList',
       label: localization.command_openBacklinksIgnoreList,
-      iconName: 'fas fa-hand-point-left',
+      iconName: 'fas fa-filter',
       execute: async () => {
         const options = [];
         const list = await this.setting<string[]>('ignoreList');
 
         for (const id of list) {
           const note = await fetchNoteById(id, ['title']);
-          if (note) options.push(`<option value="${id}">${note.title.trim() !== '' ? note.title : id}</option>`);
-          else options.push(`<option value="${id}">NOTE DELETED (${id})</option>`);
+          if (note) options.push(`<option value="${id}" title="${id}">${note.title.trim() !== '' ? note.title : id}</option>`);
+          else options.push(`<option value="${id}" title="${id}">NOTE DELETED (${id})</option>`);
         }
 
         if (!options.length)
@@ -320,16 +323,29 @@ export default class App {
 
         const html = options.join('\n');
         const body = `
-          <h3>${localization.dialog_ignoreList_title}</h3>
-          <form name="notes">
-            <select style="width: 100%" name="noteId" size="12">
+          <h3 id="title">${localization.dialog_ignoreList_title}</h3>
+          <p id="description">${localization.dialog_ignoreList_description}</p>
+          <form id="notes" name="notes">
+            <select id="noteId" name="noteId" size="${options.length > 1 ? options.length : 2}">
               ${html}
             </select>
+            <ul id="hint">
+              ${localization.dialog_ignoreList_hint}
+            </ul>
           </form>
         `;
 
+        await joplin.views.dialogs.addScript(this.dialogs.ignoreList, './plugins/assets/ignore.css');
         await joplin.views.dialogs.setHtml(this.dialogs.ignoreList, body);
         await joplin.views.dialogs.setButtons(this.dialogs.ignoreList, [
+          {
+            id: 'toggle',
+            title: localization.dialog_ignoreList_toggle,
+          },
+          {
+            id: 'prune',
+            title: localization.dialog_ignoreList_prune,
+          },
           {
             id: 'ok',
             title: localization.dialog_ignoreList_open,
@@ -339,15 +355,35 @@ export default class App {
             title: localization.dialog_ignoreList_close,
           },
         ]);
+        await joplin.views.dialogs.setFitToContent(this.dialogs.ignoreList, false);
 
         const response = await joplin.views.dialogs.open(this.dialogs.ignoreList);
-        if (response.id == 'ok') {
-          try {
-            await joplin.commands.execute('openNote', response.formData.notes.noteId);
-          } catch (e) {}
+        switch (response.id) {
+          case 'toggle':
+            await joplin.commands.execute('toggleNoteBacklinksIgnoreList');
+            break;
+
+          case 'prune':
+            await joplin.commands.execute('pruneBacklinksIgnoreList');
+            break;
+
+          case 'ok':
+            try {
+              await joplin.commands.execute('openNote', response.formData.notes.noteId);
+            } catch (e) {}
+            break;
+
+          default:
+            return;
         }
       },
     });
+
+    await joplin.views.toolbarButtons.create(
+      'openBacklinksIgnoreListToolbar',
+      'openBacklinksIgnoreList',
+      ToolbarButtonLocation.EditorToolbar
+    );
   };
 
   registerPruneIgnoreListCmd = async () => {

@@ -47,6 +47,7 @@ interface AppLocalization {
   message__noteIgnoreListRemoved: string;
   message__ignoreListNotesPruned: string;
   message__ignoreListNoNotesPruned: string;
+  message__ignoreListNoSelectedNote: string;
   message__importIgnoreListSuccess: string;
   message__importIgnoreListFailure: string;
   message__importIgnoreListNotFound: string;
@@ -55,9 +56,13 @@ interface AppLocalization {
   message__reloadPanel: string;
 
   dialog_ignoreList_title: string;
+  dialog_ignoreList_description: string;
   dialog_ignoreList_empty: string;
+  dialog_ignoreList_toggle: string;
+  dialog_ignoreList_prune: string;
   dialog_ignoreList_open: string;
   dialog_ignoreList_close: string;
+  dialog_ignoreList_hint: string;
 
   menu_easyBacklinks: string;
 }
@@ -114,17 +119,26 @@ const defaultStrings: AppLocalization = {
   message__noteIgnoreListRemoved: 'Note removed from backlinks ignore list',
   message__ignoreListNotesPruned: 'note(s) pruned from backlinks ignore list',
   message__ignoreListNoNotesPruned: 'No notes to prune from backlinks ignore list',
+  message__ignoreListNoSelectedNote: 'No note is currently selected',
   message__importIgnoreListSuccess: 'Backlinks ignore list imported successfully',
   message__importIgnoreListFailure: 'Failed to import backlinks ignore list',
   message__importIgnoreListNotFound: 'Existing backlinks ignore list was not found',
   message__pruneIgnoreList: 'Prune deleted notes from ignore list?',
-  message__noBacklinksHint: '*No backlinks found.*',
+  message__noBacklinksHint: '*No entries found.*',
   message__reloadPanel: '# Easy Backlinks\n\nSelect a note to load this panel.',
 
   dialog_ignoreList_title: 'Backlinks Ignore List',
-  dialog_ignoreList_empty: 'Backlinks list is empty',
+  dialog_ignoreList_description: 'Notes in this list will be excluded from backlinks',
+  dialog_ignoreList_empty: 'Ignore list is empty',
+  dialog_ignoreList_toggle: 'Toggle',
+  dialog_ignoreList_prune: 'Prune',
   dialog_ignoreList_open: 'Open',
   dialog_ignoreList_close: 'Close',
+  dialog_ignoreList_hint: `
+    <li>Toggle: Add/remove currently opened note</li>
+    <li>Prune: Remove all notes that no longer exist</li>
+    <li>Open: Display selected note in main window</li>
+  `,
 
   menu_easyBacklinks: 'Easy backlinks',
 };
