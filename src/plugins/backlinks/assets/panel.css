@@ -9,11 +9,11 @@ html {
 body {
     margin: 0;
     padding: 0;
-    font-size: var(--joplin-note-viewer-font-size);
     color: var(--joplin-color);
+    font-size: var(--joplin-note-viewer-font-size);
     word-wrap: break-word;
-    line-height: var(--joplin-line-height);
     background-color: var(--joplin-background-color);
+    line-height: var(--joplin-line-height);
     font-family: 'Avenir Next', 'Avenir', 'Arial', sans-serif;
 }
 
@@ -31,8 +31,8 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgba(100, 100, 100, 0.3);
     border-radius: 5px;
+    background: rgba(100, 100, 100, 0.3);
 }
 
 ::-webkit-scrollbar-track:hover {
@@ -45,8 +45,8 @@ body {
 
 #joplin-plugin-content {
     display: block;
-    padding: 10px;
     margin: 0;
+    padding: 10px;
 }
 
 h1:first-child {
@@ -62,12 +62,12 @@ ul {
 }
 
 h1 {
-    font-size: 1.5em;
-    line-height: 1.5em;
     margin: .67em 0 .65em;
-    font-weight: bold;
     border-bottom: 1px solid var(--joplin-divider-color);
     padding-bottom: .3em;
+    font-weight: bold;
+    font-size: 1.5em;
+    line-height: 1.5em;
 }
 
 a {
@@ -78,8 +78,8 @@ a {
 
 ul,
 ol {
-    padding-left: 0;
     margin-left: 1.7em;
+    padding-left: 0;
 }
 
 li {
@@ -90,11 +90,11 @@ li {
     display: inline-block;
     position: relative;
     top: 0.3em;
-    text-decoration: none;
-    width: 1.2em;
-    height: 1.4em;
     margin-right: 0.4em;
     background-color: #155BDA;
+    width: 1.2em;
+    height: 1.4em;
+    text-decoration: none;
 }
 
 .fa-joplin {

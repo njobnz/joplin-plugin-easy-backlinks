@@ -315,11 +315,12 @@ export default class App {
         for (const id of list) {
           const note = await fetchNoteById(id, ['title']);
           const text = note ? (note.title.trim() !== '' ? note.title : id) : `NOTE DELETED`;
-          options.push(`<input type="radio" name="noteId" id="note-${id}" value="${id}" title="${id}"><label for="note-${id}" title="${id}">${text} (${id})</label><br>`);
+          options.push(
+            `<input type="radio" name="noteId" id="note-${id}" value="${id}" title="${id}"><label for="note-${id}" title="${id}">${text} (${id})</label><br>`
+          );
         }
 
-        if (!options.length)
-          options.push(localization.dialog_ignoreList_empty);
+        if (!options.length) options.push(localization.dialog_ignoreList_empty);
 
         const html = options.join('\n');
         const body = `

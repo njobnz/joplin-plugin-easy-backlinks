@@ -38,8 +38,8 @@ npm run dist
 
 ## Release Process
 
-- Versioning is automated with [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version). 
-- To bump version, update changelog, and create a Git tag, run: 
+- Versioning is automated with [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version).
+- To bump version, update changelog, and create a Git tag, run:
 
 ```bash
 npm run release
