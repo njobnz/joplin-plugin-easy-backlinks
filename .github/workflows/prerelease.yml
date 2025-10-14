@@ -56,4 +56,5 @@ jobs:
           asset_name: ${{ steps.manifest.outputs.id }}-v${{ steps.version.outputs.short }}.jpl
           release_name: v${{ steps.version.outputs.short }}
           tag: v${{ steps.version.outputs.short }}
+          prerelease: true
           overwrite: true
