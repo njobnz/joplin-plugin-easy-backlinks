@@ -1,7 +1,13 @@
-html, body, #notes,
+html, body, #notes, #content,
 #joplin-plugin-content-root,
 #joplin-plugin-content {
     height: 100%;
+}
+
+#content {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
 }
 
 #description {
@@ -9,16 +15,12 @@ html, body, #notes,
 }
 
 #notes {
-    display: flex;
-    flex-direction: column;
-}
-
-#noteId {
     flex-grow: 1;
 }
 
 #hint {
-    color: var(--joplin-color-faded);
     padding-left: 0;
+    color: var(--joplin-color-faded);
     list-style-type: none;
+    text-align: right;
 }

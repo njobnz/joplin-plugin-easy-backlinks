@@ -56,7 +56,7 @@ export default class App {
       case GET_BACKLINKS_CMD:
         return await this.getBacklinksList(message?.isFound ? true : false);
       case GET_GLOBAL_VALUE_CMD:
-        return await this.setting(message?.name, undefined, true) ?? null;
+        return (await this.setting(message?.name, undefined, true)) ?? null;
       case GET_SETTINGS_CMD:
         const values = message?.values;
         if (!Array.isArray(values)) return {};
@@ -193,7 +193,7 @@ export default class App {
       execute: async () => {
         try {
           const settingKey = 'plugin-joplin.plugin.ambrt.backlinksToNote.myBacklinksCustomSettingIgnoreList';
-          const importList = await this.setting<string[]>(settingKey, undefined, true) || [];
+          const importList = (await this.setting<string[]>(settingKey, undefined, true)) || [];
           const ignoreList = await this.setting<string[]>('ignoreList');
           await this.setting<string[]>('ignoreList', [...new Set([...ignoreList, ...importList])]);
           alert(localization.message__importIgnoreListSuccess);
@@ -314,25 +314,27 @@ export default class App {
 
         for (const id of list) {
           const note = await fetchNoteById(id, ['title']);
-          if (note) options.push(`<option value="${id}" title="${id}">${note.title.trim() !== '' ? note.title : id}</option>`);
-          else options.push(`<option value="${id}" title="${id}">NOTE DELETED (${id})</option>`);
+          const text = note ? (note.title.trim() !== '' ? note.title : id) : `NOTE DELETED`;
+          options.push(`<input type="radio" name="noteId" id="note-${id}" value="${id}" title="${id}"><label for="note-${id}" title="${id}">${text} (${id})</label><br>`);
         }
 
         if (!options.length)
-          options.push(`<option selected="selected">${localization.dialog_ignoreList_empty}</option>`);
+          options.push(localization.dialog_ignoreList_empty);
 
         const html = options.join('\n');
         const body = `
-          <h3 id="title">${localization.dialog_ignoreList_title}</h3>
-          <p id="description">${localization.dialog_ignoreList_description}</p>
-          <form id="notes" name="notes">
-            <select id="noteId" name="noteId" size="${options.length > 1 ? options.length : 2}">
-              ${html}
-            </select>
+          <div id="content">
+            <h3 id="title">${localization.dialog_ignoreList_title}</h3>
+            <p id="description">${localization.dialog_ignoreList_description}</p>
+            <form id="notes" name="notes">
+              <div id="list">
+                ${html}
+              </div>
+            </form>
             <ul id="hint">
               ${localization.dialog_ignoreList_hint}
             </ul>
-          </form>
+          </div>
         `;
 
         await joplin.views.dialogs.addScript(this.dialogs.ignoreList, './plugins/assets/ignore.css');
