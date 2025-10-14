@@ -86,7 +86,11 @@ export default class App {
     }
   };
 
-  getBacklinksList = async (isFound: boolean = false, isPanel: boolean = false): Promise<BacklinksContent> => {
+  getBacklinksList = async (
+    isFound: boolean = false,
+    isPanel: boolean = false,
+    isMarkdown: boolean = false
+  ): Promise<BacklinksContent> => {
     const result = {
       position: BacklinksListPosition.Footer,
       hide: true,
@@ -110,16 +114,17 @@ export default class App {
     result.hide = notes.length === 0 && (await this.setting<boolean>('hideEmpty'));
 
     if (isPanel || !result.hide) {
-      result.head = await this.renderer.render(
-        this.generateBacklinksHead(note, await this.setting<string>('listHeader'))
+      result.head = this.generateBacklinksHead(note, await this.setting<string>('listHeader'));
+      result.body = await this.generateBacklinksList(
+        notes,
+        await this.setting<BacklinksListType>('listType'),
+        await this.setting<boolean>('showHint')
       );
-      result.body = await this.renderer.render(
-        await this.generateBacklinksList(
-          notes,
-          await this.setting<BacklinksListType>('listType'),
-          await this.setting<boolean>('showHint')
-        )
-      );
+
+      if (!isMarkdown) {
+        result.head = await this.renderer.render(result.head);
+        result.body = await this.renderer.render(result.body);
+      }
     }
 
     return result;
@@ -218,14 +223,15 @@ export default class App {
         const note = (await joplin.workspace.selectedNote()) as JoplinNote;
         if (!note) return;
 
-        const header = replaceEscape(await this.setting<string>('manualHeader'));
-        const head = header ? header : this.generateBacklinksHead(note, await this.setting<string>('listHeader'));
-        const body =
+        const head =
+          replaceEscape(await this.setting<string>('manualHeader')) ||
+          this.generateBacklinksHead(note, await this.setting<string>('listHeader'));
+        const html =
           (await this.setting<BacklinksListPosition>('listPosition')) === BacklinksListPosition.Header
             ? `${head}\n\n${note.body}`
             : `${note.body}\n${head}\n`;
 
-        await joplin.commands.execute('editor.setText', body);
+        await joplin.commands.execute('editor.setText', html);
       },
     });
   };
@@ -239,29 +245,15 @@ export default class App {
         const note = (await joplin.workspace.selectedNote()) as JoplinNote;
         if (!note) return;
 
-        const notes = await findNoteBacklinks(
-          note.id,
-          await this.setting<string[]>('ignoreList'),
-          await this.setting<string>('ignoreTag')
-        );
-        if (!notes) return;
-
+        const result = await this.getBacklinksList(true, true, true);
         const disable = await this.setting<string>('disableText');
-        const header = replaceEscape(await this.setting<string>('manualHeader'));
-        const text = !note.body.includes(disable) ? `${disable}\n` : '';
-        const head = header ? header : this.generateBacklinksHead(note, await this.setting<string>('listHeader'));
-        const list = await this.generateBacklinksList(
-          notes,
-          await this.setting<BacklinksListType>('listType'),
-          await this.setting<boolean>('showHint')
-        );
-        const html = `${text}${head}\n\n${list}`;
-        const body =
-          (await this.setting<BacklinksListPosition>('listPosition')) === BacklinksListPosition.Header
-            ? `${html}\n\n${note.body}`
-            : `${note.body}\n${html}\n`;
+        const text = !note.body.includes(disable) ? `${disable}` : '';
+        const head = replaceEscape(await this.setting<string>('manualHeader')) || result.head;
+        const body = `${text}\n${head}\n\n${result.body}`;
+        const html =
+          result.position === BacklinksListPosition.Header ? `${body}\n\n${note.body}` : `${note.body}\n${body}\n`;
 
-        await joplin.commands.execute('editor.setText', body);
+        await joplin.commands.execute('editor.setText', html);
       },
     });
 
