@@ -5,6 +5,14 @@ export const SETTINGS_SECTION_NAME: string = 'tuibyte-easy-backlinks';
 export const BACKLINKS_PANEL_EL: string = 'easy-backlinks-panel';
 export const BACKLINKS_PANEL_ID: string = 'easy_backlinks_panel';
 
+export const IGNORE_PANEL_EL: string = 'easy-backlinks-ignore';
+export const IGNORE_PANEL_ID: string = 'easy_backlinks_ignore';
+
+export const ADD_IGNORED_CMD: string = 'addIgnoredNote';
+export const DEL_IGNORED_CMD: string = 'delIgnoredNote';
+export const CLEAR_IGNORE_CMD: string = 'clearIgnoreList';
+export const PRUNE_IGNORE_CMD: string = 'pruneIgnoreList';
+
 export const GET_BACKLINKS_CMD: string = 'getBacklinks';
 export const GET_GLOBAL_VALUE_CMD: string = 'getGlobalValue';
 export const GET_SETTINGS_CMD: string = 'getSettings';

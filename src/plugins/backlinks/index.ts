@@ -45,7 +45,7 @@ export default class BacklinksView {
       }
 
       if (this.panel) {
-        const backlinks = await this.app.getBacklinksList(true, true);
+        const backlinks = await this.app.getBacklinks(true, true);
         backlinks.head = backlinks.head.replace(/<\/?h[1-6]\b/g, match => (match[1] === '/' ? '</h1' : '<h1'));
         await joplin.views.panels.setHtml(this.panel, await this.content(`${backlinks.head}${backlinks.body}`));
       } else {
@@ -61,9 +61,11 @@ export default class BacklinksView {
 
     try {
       fs = await import('fs');
+      if (fs && fs.existsSync === undefined) fs = null;
     } catch (e) {}
 
     await joplin.settings.onChange(this.refresh);
     await joplin.workspace.onNoteSelectionChange(this.refresh);
+    await this.refresh();
   };
 }

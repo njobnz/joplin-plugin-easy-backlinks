@@ -1,0 +1,197 @@
+/* https://necolas.github.io/normalize.css/ */
+html {
+  overflow: auto;
+  line-height: 1.15;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  color: var(--joplin-color);
+  font-size: var(--joplin-note-viewer-font-size);
+  word-wrap: break-word;
+  background-color: var(--joplin-background-color);
+  line-height: var(--joplin-line-height);
+  font-family: 'Avenir Next', 'Avenir', 'Arial', sans-serif;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-corner {
+  background: none;
+}
+
+::-webkit-scrollbar-track {
+  border: none;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background: rgba(100, 100, 100, 0.3);
+}
+
+::-webkit-scrollbar-track:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 100, 100, 0.7);
+}
+
+#joplin-plugin-content {
+  display: block;
+  margin: 0;
+  padding: 10px;
+}
+
+h1:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+h1,
+ul {
+  margin-top: .6em;
+  margin-bottom: 1.35em;
+  unicode-bidi: plaintext;
+}
+
+h1 {
+  margin: .67em 0 .65em;
+  border-bottom: 1px solid var(--joplin-divider-color);
+  padding-bottom: .3em;
+  font-weight: bold;
+  font-size: 1.5em;
+  line-height: 1.5em;
+}
+
+a {
+  background-color: transparent;
+  -webkit-text-decoration-skip: objects;
+  color: var(--joplin-url-color);
+}
+
+.table {
+  display: table;
+}
+
+.table .row {
+  display: table-row;
+}
+
+.table .cell {
+  display: table-cell;
+}
+
+.input {
+  border: 1px solid var(--joplin-border-color4);
+  border-radius: 3px;
+  background-color: var(--joplin-background-color);
+  padding: 4px 6px;
+  color: var(--joplin-color);
+}
+
+.input:focus {
+  border: 1px solid var(--joplin-color-hover);
+  background-color: var(--joplin-background-color4);
+}
+
+.input:focus-visible {
+  outline: none;
+}
+
+.button {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border: 1px solid var(--joplin-border-color4);
+  border-radius: 3px;
+  background-color: var(--joplin-background-color);
+  padding: 0 7px;
+  height: 26px;
+  min-height: 26px;
+  max-height: 26px;
+  color: var(--joplin-color4);
+  font-family: var(--joplin-font-family);
+  user-select: none;
+  text-wrap: nowrap;
+  white-space: nowrap;
+}
+
+.button:hover {
+  background-color: var(--joplin-background-color-hover4);
+}
+
+.button:active {
+  background-color: var(--joplin-background-color-active4);
+}
+
+.button .icon {
+  margin-right: 6px;
+  font-size: 11px;
+}
+
+#easy-backlinks-panel {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+#description {
+  margin-top: 0;
+}
+
+#notes {
+  flex-grow: 1;
+}
+
+#entry {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 1em;
+}
+
+#note {
+  flex-grow: 1;
+}
+
+#list {
+  margin-bottom: 1em;
+  width: 100%;
+}
+
+#list .empty {
+  font-style: italic;
+}
+
+#list .row.selected a {
+  font-weight: bold;
+}
+
+#list .row.deleted a {
+  color: var(--joplin-color-faded);
+}
+
+#list .row .actions {
+  padding-right: 0.2em;
+}
+
+#list .row .actions a:hover {
+  cursor: pointer;
+}
+
+#list .row .title {
+  width: 100%;
+}
+
+#actions {
+  border-top: 1px solid var(--joplin-divider-color);
+  padding-top: 1em;
+}

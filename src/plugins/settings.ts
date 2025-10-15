@@ -231,6 +231,17 @@ export default class AppSettings {
         advanced: true,
       },
 
+      ignorePanel: {
+        public: true,
+        section: SETTINGS_SECTION_NAME,
+        storage: SettingStorage.File,
+        label: localization.setting__ignorePanel,
+        description: localization.setting__ignorePanel__description,
+        type: SettingItemType.Bool,
+        value: false,
+        advanced: true,
+      },
+
       ignoreList: {
         public: false,
         section: SETTINGS_SECTION_NAME,

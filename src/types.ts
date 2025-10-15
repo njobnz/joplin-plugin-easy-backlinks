@@ -16,6 +16,7 @@ export interface PluginSettings {
   listDelimiter: string;
   disableText: string;
   ignoreText: string;
+  ignorePanel: boolean;
   ignoreList: string[];
 }
 

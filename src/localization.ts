@@ -32,14 +32,19 @@ interface AppLocalization {
   setting__disableText__description: string;
   setting__ignoreText: string;
   setting__ignoreText__description: string;
+  setting__ignorePanel: string;
+  setting__ignorePanel__description: string;
   setting__ignoreList: string;
   setting__ignoreList__description: string;
 
   command_importBacklinksIgnoreList: string;
   command_insertBacklinksHeader: string;
   command_insertBacklinksList: string;
+  command_addNoteBacklinksIgnoreList: string;
+  command_delNoteBacklinksIgnoreList: string;
   command_toggleNoteBacklinksIgnoreList: string;
   command_openBacklinksIgnoreList: string;
+  command_clearBacklinksIgnoreList: string;
   command_pruneBacklinksIgnoreList: string;
   command_toggleBacklinksPanel: string;
 
@@ -48,21 +53,25 @@ interface AppLocalization {
   message__ignoreListNotesPruned: string;
   message__ignoreListNoNotesPruned: string;
   message__ignoreListNoSelectedNote: string;
+  message__clearIgnoreList: string;
   message__importIgnoreListSuccess: string;
   message__importIgnoreListFailure: string;
   message__importIgnoreListNotFound: string;
+  message__removeFromIgnoreList: string;
+  message__noteRemovedFromIgnoreList: any;
+  message__noteAddedToIgnoreList: any;
   message__pruneIgnoreList: string;
   message__noBacklinksHint: string;
   message__reloadPanel: string;
 
-  dialog_ignoreList_title: string;
-  dialog_ignoreList_description: string;
-  dialog_ignoreList_empty: string;
-  dialog_ignoreList_toggle: string;
-  dialog_ignoreList_prune: string;
-  dialog_ignoreList_open: string;
-  dialog_ignoreList_close: string;
-  dialog_ignoreList_hint: string;
+  view_ignoreList_title: string;
+  view_ignoreList_description: string;
+  view_ignoreList_placeholder: string;
+  view_ignoreList_empty: string;
+  view_ignoreList_add: string;
+  view_ignoreList_remove: string;
+  view_ignoreList_prune: string;
+  view_ignoreList_clear: string;
 
   menu_easyBacklinks: string;
 }
@@ -104,14 +113,19 @@ const defaultStrings: AppLocalization = {
     'Text to disable automatic backlinks in notes. (Default: <!-- backlinks-disable -->)',
   setting__ignoreText: 'Ignore text',
   setting__ignoreText__description: 'Text to exclude notes from backlinks. (Default: <!-- backlinks-ignore -->)',
+  setting__ignorePanel: 'Ignore panel',
+  setting__ignorePanel__description: 'Show backlinks ignore list panel.',
   setting__ignoreList: 'Ignore list',
   setting__ignoreList__description: 'List of notes to exclude from backlinks.',
 
   command_importBacklinksIgnoreList: 'Import existing backlinks ignore list into Easy Backlinks',
   command_insertBacklinksHeader: 'Insert backlinks header',
   command_insertBacklinksList: 'Insert backlinks list',
+  command_addNoteBacklinksIgnoreList: 'Add note to backlinks ignore list',
+  command_delNoteBacklinksIgnoreList: 'Remove note from backlinks ignore list',
   command_toggleNoteBacklinksIgnoreList: 'Toggle note in backlinks ignore list',
   command_openBacklinksIgnoreList: 'Open backlinks ignore list',
+  command_clearBacklinksIgnoreList: 'Clear backlinks ignore list',
   command_pruneBacklinksIgnoreList: 'Prune backlinks ignore list',
   command_toggleBacklinksPanel: 'Show/hide backlinks panel',
 
@@ -120,25 +134,25 @@ const defaultStrings: AppLocalization = {
   message__ignoreListNotesPruned: 'note(s) pruned from backlinks ignore list',
   message__ignoreListNoNotesPruned: 'No notes to prune from backlinks ignore list',
   message__ignoreListNoSelectedNote: 'No note is currently selected',
+  message__clearIgnoreList: 'Warning: This will remove all notes from the ignore list. Are you sure?',
   message__importIgnoreListSuccess: 'Backlinks ignore list imported successfully',
   message__importIgnoreListFailure: 'Failed to import backlinks ignore list',
   message__importIgnoreListNotFound: 'Existing backlinks ignore list was not found',
+  message__removeFromIgnoreList: 'Remove this note from the backlinks ignore list?',
+  message__noteRemovedFromIgnoreList: 'Note removed from backlinks ignore list',
+  message__noteAddedToIgnoreList: 'Note added to backlinks ignore list',
   message__pruneIgnoreList: 'Prune deleted notes from ignore list?',
   message__noBacklinksHint: '*No entries found.*',
   message__reloadPanel: '# Easy Backlinks\n\nSelect a note to load this panel.',
 
-  dialog_ignoreList_title: 'Backlinks Ignore List',
-  dialog_ignoreList_description: 'Notes in this list will be excluded from backlinks',
-  dialog_ignoreList_empty: 'Ignore list is empty',
-  dialog_ignoreList_toggle: 'Toggle',
-  dialog_ignoreList_prune: 'Prune',
-  dialog_ignoreList_open: 'Open',
-  dialog_ignoreList_close: 'Close',
-  dialog_ignoreList_hint: `
-    <li>Toggle: Add/remove currently opened note</li>
-    <li>Prune: Remove all notes that no longer exist</li>
-    <li>Open: Display selected note in main window</li>
-  `,
+  view_ignoreList_title: 'Backlinks Ignore List',
+  view_ignoreList_description: 'Notes in this list are excluded from backlinks',
+  view_ignoreList_placeholder: 'Enter note ID',
+  view_ignoreList_empty: 'Backlinks ignore list is empty',
+  view_ignoreList_add: 'Add note',
+  view_ignoreList_remove: 'Remove note',
+  view_ignoreList_prune: 'Prune deleted notes from the ignore list',
+  view_ignoreList_clear: 'Remove all notes from the ignore list',
 
   menu_easyBacklinks: 'Easy backlinks',
 };

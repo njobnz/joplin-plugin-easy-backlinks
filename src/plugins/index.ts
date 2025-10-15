@@ -13,10 +13,13 @@ import {
   SET_SETTING_CMD,
   GET_SETTINGS_CMD,
   GET_GLOBAL_VALUE_CMD,
+  ADD_IGNORED_CMD,
+  DEL_IGNORED_CMD,
+  CLEAR_IGNORE_CMD,
+  PRUNE_IGNORE_CMD,
   BacklinksListSort,
   BacklinksListOrder,
 } from '../constants';
-import fetchNoteById from '../utils/fetchNoteById';
 import fetchNoteParentTitles from '../utils/fetchNoteParentTitles';
 import findNoteBacklinks from '../utils/findNoteBacklinks';
 import escapeMarkdown from '../utils/escapeMarkdown';
@@ -25,21 +28,21 @@ import AppSettings from './settings';
 import Renderer from './renderer';
 import MarkdownView from './markdownIt';
 import BacklinksView from './backlinks';
+import IgnoreList from './ignore';
 
 export default class App {
   settings: AppSettings;
   renderer: Renderer;
   viewer: MarkdownView;
   panel: BacklinksView;
-  dialogs: {
-    ignoreList: any;
-  };
+  ignore: IgnoreList;
 
   constructor() {
     this.settings = new AppSettings(this);
     this.renderer = new Renderer(this);
     this.viewer = new MarkdownView(this);
     this.panel = new BacklinksView(this);
+    this.ignore = new IgnoreList(this);
   }
 
   setting = async <T>(name: string, value?: T, isGlobal?: boolean): Promise<T> => {
@@ -54,7 +57,7 @@ export default class App {
   onMessageHandler = async (message: any): Promise<any> => {
     switch (message?.command) {
       case GET_BACKLINKS_CMD:
-        return await this.getBacklinksList(message?.isFound ? true : false);
+        return await this.getBacklinks(message?.isFound ? true : false);
       case GET_GLOBAL_VALUE_CMD:
         return (await this.setting(message?.name, undefined, true)) ?? null;
       case GET_SETTINGS_CMD:
@@ -80,13 +83,33 @@ export default class App {
           console.error('Cannot open note:', exception, message);
           return { error: 'Cannot open note:', exception, message };
         }
+      case ADD_IGNORED_CMD:
+        try {
+          if (!message?.noteId) throw Error('Note ID is missing.');
+          return await joplin.commands.execute('addNoteBacklinksIgnoreList', message.noteId);
+        } catch (exception) {
+          console.error('Cannot add note:', exception, message);
+          return { error: 'Cannot add note:', exception, message };
+        }
+      case DEL_IGNORED_CMD:
+        try {
+          if (!message?.noteId) throw Error('Note ID is missing.');
+          return await joplin.commands.execute('delNoteBacklinksIgnoreList', message.noteId);
+        } catch (exception) {
+          console.error('Cannot remove note:', exception, message);
+          return { error: 'Cannot remove note:', exception, message };
+        }
+      case CLEAR_IGNORE_CMD:
+        return await joplin.commands.execute('clearBacklinksIgnoreList');
+      case PRUNE_IGNORE_CMD:
+        return await joplin.commands.execute('pruneBacklinksIgnoreList');
       default:
         console.error('Unknown command:', message);
         return { error: 'Unknown command:', message };
     }
   };
 
-  getBacklinksList = async (
+  getBacklinks = async (
     isFound: boolean = false,
     isPanel: boolean = false,
     isMarkdown: boolean = false
@@ -114,8 +137,8 @@ export default class App {
     result.hide = notes.length === 0 && (await this.setting<boolean>('hideEmpty'));
 
     if (isPanel || !result.hide) {
-      result.head = this.generateBacklinksHead(note, await this.setting<string>('listHeader'));
-      result.body = await this.generateBacklinksList(
+      result.head = this.generateHeader(note, await this.setting<string>('listHeader'));
+      result.body = await this.generateBacklinks(
         notes,
         await this.setting<BacklinksListType>('listType'),
         await this.setting<boolean>('showHint')
@@ -130,14 +153,14 @@ export default class App {
     return result;
   };
 
-  generateBacklinksHead = (note: JoplinNote, header: string): string => {
+  generateHeader = (note: JoplinNote, header: string): string => {
     if (!header || /^#{1,6}(?=\s)/.test(header)) return header;
     const headers = note.body.match(/^#{1,6}(?=\s)/gm) || [];
     const largest = headers.length ? '#'.repeat(Math.min(...headers.map(h => h.length))) : '#';
     return `${largest} ${header}`;
   };
 
-  generateBacklinksList = async (
+  generateBacklinks = async (
     notes: JoplinNote[],
     type: BacklinksListType = BacklinksListType.Delimited,
     hint: boolean = false
@@ -166,55 +189,7 @@ export default class App {
     return result.join(delimiter);
   };
 
-  pruneBacklinksIgnoreList = async (): Promise<number> => {
-    let result = 0;
-
-    const list = await this.setting<string[]>('ignoreList');
-    for (let i = list.length - 1; i >= 0; i--) {
-      const id = list[i];
-      const note = await fetchNoteById(id);
-      if (!note) {
-        let index = list.indexOf(id);
-        if (index > -1) list.splice(index, 1);
-        result++;
-      }
-    }
-    await this.setting<string[]>('ignoreList', list);
-
-    return result;
-  };
-
-  createBacklinksDialogs = async () => {
-    this.dialogs = {
-      ignoreList: await joplin.views.dialogs.create('easyBacklinksIgnoreListDialog'),
-    };
-  };
-
-  registerImportBacklinksIgnoreListCmd = async () => {
-    await joplin.commands.register({
-      name: 'importBacklinksIgnoreList',
-      label: localization.command_importBacklinksIgnoreList,
-      iconName: 'fas fa-hand-point-left',
-      execute: async () => {
-        try {
-          const settingKey = 'plugin-joplin.plugin.ambrt.backlinksToNote.myBacklinksCustomSettingIgnoreList';
-          const importList = (await this.setting<string[]>(settingKey, undefined, true)) || [];
-          const ignoreList = await this.setting<string[]>('ignoreList');
-          await this.setting<string[]>('ignoreList', [...new Set([...ignoreList, ...importList])]);
-          alert(localization.message__importIgnoreListSuccess);
-        } catch (e) {
-          const message = e instanceof Error ? e.message : String(e);
-          if (message.startsWith('Unknown key')) {
-            alert(localization.message__importIgnoreListNotFound);
-          } else {
-            alert(`${localization.message__importIgnoreListFailure}:\n\n${message}`);
-          }
-        }
-      },
-    });
-  };
-
-  registerInsertBacklinksHeadCmd = async () => {
+  registerInsertHeader = async () => {
     await joplin.commands.register({
       name: 'insertBacklinksHeader',
       label: localization.command_insertBacklinksHeader,
@@ -225,7 +200,7 @@ export default class App {
 
         const head =
           replaceEscape(await this.setting<string>('manualHeader')) ||
-          this.generateBacklinksHead(note, await this.setting<string>('listHeader'));
+          this.generateHeader(note, await this.setting<string>('listHeader'));
         const html =
           (await this.setting<BacklinksListPosition>('listPosition')) === BacklinksListPosition.Header
             ? `${head}\n\n${note.body}`
@@ -234,9 +209,13 @@ export default class App {
         await joplin.commands.execute('editor.setText', html);
       },
     });
+
+    await joplin.views.menuItems.create('insertBacklinksHeaderMenu', 'insertBacklinksHeader', MenuItemLocation.Note, {
+      accelerator: 'Ctrl+Alt+H',
+    });
   };
 
-  registerInsertBacklinksListCmd = async () => {
+  registerInsertBacklinks = async () => {
     await joplin.commands.register({
       name: 'insertBacklinksList',
       label: localization.command_insertBacklinksList,
@@ -245,7 +224,7 @@ export default class App {
         const note = (await joplin.workspace.selectedNote()) as JoplinNote;
         if (!note) return;
 
-        const result = await this.getBacklinksList(true, true, true);
+        const result = await this.getBacklinks(true, true, true);
         const disable = await this.setting<string>('disableText');
         const text = !note.body.includes(disable) ? `${disable}` : '';
         const head = replaceEscape(await this.setting<string>('manualHeader')) || result.head;
@@ -268,140 +247,7 @@ export default class App {
     );
   };
 
-  registerToggleIgnoreListCmd = async () => {
-    await joplin.commands.register({
-      name: 'toggleNoteBacklinksIgnoreList',
-      label: localization.command_toggleNoteBacklinksIgnoreList,
-      iconName: 'fas fa-hand-point-left',
-      execute: async () => {
-        const note = (await joplin.workspace.selectedNote()) as JoplinNote;
-        if (!note) {
-          alert(localization.message__ignoreListNoSelectedNote);
-          return;
-        }
-
-        const list = await this.setting<string[]>('ignoreList');
-        if (list.includes(note.id)) {
-          let index = list.indexOf(note.id);
-          if (index > -1) list.splice(index, 1);
-          alert(localization.message__noteIgnoreListRemoved);
-        } else {
-          list.push(note.id);
-          alert(localization.message__noteIgnoreListAdded);
-        }
-
-        await this.setting<string[]>('ignoreList', list);
-      },
-    });
-  };
-
-  registerOpenIgnoreListCmd = async () => {
-    await joplin.commands.register({
-      name: 'openBacklinksIgnoreList',
-      label: localization.command_openBacklinksIgnoreList,
-      iconName: 'fas fa-filter',
-      execute: async () => {
-        const options = [];
-        const list = await this.setting<string[]>('ignoreList');
-
-        for (const id of list) {
-          const note = await fetchNoteById(id, ['title']);
-          const text = note ? (note.title.trim() !== '' ? note.title : id) : `NOTE DELETED`;
-          options.push(
-            `<input type="radio" name="noteId" id="note-${id}" value="${id}" title="${id}"><label for="note-${id}" title="${id}">${text} (${id})</label><br>`
-          );
-        }
-
-        if (!options.length) options.push(localization.dialog_ignoreList_empty);
-
-        const html = options.join('\n');
-        const body = `
-          <div id="content">
-            <h3 id="title">${localization.dialog_ignoreList_title}</h3>
-            <p id="description">${localization.dialog_ignoreList_description}</p>
-            <form id="notes" name="notes">
-              <div id="list">
-                ${html}
-              </div>
-            </form>
-            <ul id="hint">
-              ${localization.dialog_ignoreList_hint}
-            </ul>
-          </div>
-        `;
-
-        await joplin.views.dialogs.addScript(this.dialogs.ignoreList, './plugins/assets/ignore.css');
-        await joplin.views.dialogs.setHtml(this.dialogs.ignoreList, body);
-        await joplin.views.dialogs.setButtons(this.dialogs.ignoreList, [
-          {
-            id: 'toggle',
-            title: localization.dialog_ignoreList_toggle,
-          },
-          {
-            id: 'prune',
-            title: localization.dialog_ignoreList_prune,
-          },
-          {
-            id: 'ok',
-            title: localization.dialog_ignoreList_open,
-          },
-          {
-            id: 'cancel',
-            title: localization.dialog_ignoreList_close,
-          },
-        ]);
-        await joplin.views.dialogs.setFitToContent(this.dialogs.ignoreList, false);
-
-        const response = await joplin.views.dialogs.open(this.dialogs.ignoreList);
-        switch (response.id) {
-          case 'toggle':
-            await joplin.commands.execute('toggleNoteBacklinksIgnoreList');
-            break;
-
-          case 'prune':
-            await joplin.commands.execute('pruneBacklinksIgnoreList');
-            break;
-
-          case 'ok':
-            try {
-              await joplin.commands.execute('openNote', response.formData.notes.noteId);
-            } catch (e) {}
-            break;
-
-          default:
-            return;
-        }
-      },
-    });
-
-    await joplin.views.toolbarButtons.create(
-      'openBacklinksIgnoreListToolbar',
-      'openBacklinksIgnoreList',
-      ToolbarButtonLocation.EditorToolbar
-    );
-  };
-
-  registerPruneIgnoreListCmd = async () => {
-    await joplin.commands.register({
-      name: 'pruneBacklinksIgnoreList',
-      label: localization.command_pruneBacklinksIgnoreList,
-      iconName: 'fas fa-hand-point-left',
-      execute: async () => {
-        const confirm = await joplin.views.dialogs.showMessageBox(localization.message__pruneIgnoreList);
-        if (confirm !== 0) return;
-
-        const result = await this.pruneBacklinksIgnoreList();
-        const message =
-          result > 0
-            ? `${result} ${localization.message__ignoreListNotesPruned}`
-            : localization.message__ignoreListNoNotesPruned;
-
-        alert(message);
-      },
-    });
-  };
-
-  registerToggleBacklinksPanelCmd = async () => {
+  registerTogglePanel = async () => {
     await joplin.commands.register({
       name: 'toggleBacklinksPanel',
       label: localization.command_toggleBacklinksPanel,
@@ -420,37 +266,15 @@ export default class App {
     );
   };
 
-  createBacklinksMenus = async () => {
-    await joplin.views.menus.create('easyBacklinksMenu', 'Easy backlinks', [
-      {
-        commandName: 'toggleNoteBacklinksIgnoreList',
-        accelerator: 'Ctrl+Alt+I',
-      },
-      {
-        commandName: 'openBacklinksIgnoreList',
-        accelerator: 'Ctrl+Alt+L',
-      },
-      {
-        commandName: 'pruneBacklinksIgnoreList',
-        accelerator: 'Ctrl+Alt+P',
-      },
-    ]);
-  };
-
   init = async (): Promise<void> => {
     await this.settings.init();
     await this.renderer.init();
     await this.viewer.init();
     await this.panel.init();
+    await this.ignore.init();
 
-    await this.createBacklinksDialogs();
-    await this.registerImportBacklinksIgnoreListCmd();
-    await this.registerInsertBacklinksHeadCmd();
-    await this.registerInsertBacklinksListCmd();
-    await this.registerToggleBacklinksPanelCmd();
-    await this.registerOpenIgnoreListCmd();
-    await this.registerPruneIgnoreListCmd();
-    await this.registerToggleIgnoreListCmd();
-    await this.createBacklinksMenus();
+    await this.registerInsertHeader();
+    await this.registerInsertBacklinks();
+    await this.registerTogglePanel();
   };
 }
