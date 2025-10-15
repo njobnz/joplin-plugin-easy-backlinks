@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.3.0](https://github.com/njobnz/joplin-plugin-easy-backlinks/compare/v1.2.1...v1.3.0) (2025-10-15)
+
+
+### Features
+
+* improve ignore list dialog ([9ff3716](https://github.com/njobnz/joplin-plugin-easy-backlinks/commit/9ff37162c7105381869b6a82ab80936a44d8fb39)), closes [#6](https://github.com/njobnz/joplin-plugin-easy-backlinks/issues/6)
+* overhauled ignore list interface ([b62035f](https://github.com/njobnz/joplin-plugin-easy-backlinks/commit/b62035fb0eb573386ae042437a9c6554694be894))
+
+
+### Bug Fixes
+
+* manual insert command returns empty backlinks ([fe3a536](https://github.com/njobnz/joplin-plugin-easy-backlinks/commit/fe3a53657644ac42c0ea4ed86ba2924d8f5df491))
+* replace deprecated globalValue with globalValues ([1d17b0c](https://github.com/njobnz/joplin-plugin-easy-backlinks/commit/1d17b0c949b4c929b8169d5b1d4e9e89d2157610))
+
 ## [1.2.1](https://github.com/njobnz/joplin-plugin-easy-backlinks/compare/v1.2.0...v1.2.1) (2025-08-15)
 
 
