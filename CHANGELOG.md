@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.3.1](https://github.com/njobnz/joplin-plugin-easy-backlinks/compare/v1.3.0...v1.3.1) (2025-10-16)
+
+
+### Bug Fixes
+
+* add short delay to backlinks initialization for better reliability on mobile ([12bada0](https://github.com/njobnz/joplin-plugin-easy-backlinks/commit/12bada07a45e0668f3420bf0e0b974563fc09239)), closes [#7](https://github.com/njobnz/joplin-plugin-easy-backlinks/issues/7)
+* correct fallback check for global settings retrieval ([fd81da7](https://github.com/njobnz/joplin-plugin-easy-backlinks/commit/fd81da763032b73ed91769302ddd55352c445b59))
+
 ## [1.3.0](https://github.com/njobnz/joplin-plugin-easy-backlinks/compare/v1.2.1...v1.3.0) (2025-10-15)
 
 
