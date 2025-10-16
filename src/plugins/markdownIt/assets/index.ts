@@ -56,8 +56,10 @@ export class EasyBacklinks {
   }
 
   init(): void {
-    this.writeBacklinks();
-    document.addEventListener('joplin-noteDidUpdate', () => this.writeBacklinks());
+    setTimeout(() => {
+      this.writeBacklinks();
+      document.addEventListener('joplin-noteDidUpdate', () => this.writeBacklinks());
+    }, 300);
   }
 }
 
